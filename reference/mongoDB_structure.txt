@@ -1,0 +1,29 @@
+Database name: twinkeep_db
+Collections: accounts, books
+
+Account document structure:
+{
+    "firstName":string,
+    "lastName":string,
+    "address:string,
+    "city":string,
+    "state":string,
+    "aptNumber":string,
+    "zipCode":string,
+    "email":string,
+    "phoneNumber":number,
+    "accountID":string,
+    "checkedOutQuantity":number,
+    "checkedOutIDs":[strings]
+}
+
+Book document structure:
+{
+    "bookName":string,
+    "bookID":string
+    "author":string,
+    "genres":[strings],
+    "rating":number,
+    "amountTotal":number,
+    "amountCheckedOut":number, 
+}
