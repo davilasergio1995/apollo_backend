@@ -1,4 +1,4 @@
-Database name: twinkeep_db
+Database name: apollo_db
 Collections: accounts, books
 
 Account document structure:

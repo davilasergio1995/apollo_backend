@@ -1,10 +1,10 @@
 const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
-const twinkeep = express();
+const apollo = express();
 const jwt = require('jsonwebtoken');
 const Axios = require('axios');
-const server = http.createServer(twinkeep);
+const server = http.createServer(apollo);
 const cors = require('cors');
 const bp = require('body-parser');
 const bcrypt = require('bcrypt');
@@ -18,9 +18,9 @@ const {newID} = require('./rValGen.js');
 const userClass = require('./document_schemas/userClass.js');
 const { clearScreenDown } = require('readline');
 
-twinkeep.use(cors());
-twinkeep.use(bp.json())
-twinkeep.use(bp.urlencoded({ extended: true }));
+apollo.use(cors());
+apollo.use(bp.json())
+apollo.use(bp.urlencoded({ extended: true }));
 
 let verifyToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -51,7 +51,7 @@ let verifySession = async(req,res,next) => {
     };
 };
 
-twinkeep.post('/api/signup', async(req,res) => {
+apollo.post('/api/signup', async(req,res) => {
     try {
         let user = req.body;
         console.log(user);
@@ -75,7 +75,7 @@ twinkeep.post('/api/signup', async(req,res) => {
     };
 });
 
-twinkeep.get('/api/getbranches',async(req,res) => {
+apollo.get('/api/getbranches',async(req,res) => {
     try {
         let getBranches = await Branch.find({});
         let branches = getBranches.map(e => e.branchName);
@@ -85,7 +85,7 @@ twinkeep.get('/api/getbranches',async(req,res) => {
     }
 });
 
-twinkeep.get('/api/holdfloatget',verifySession,verifyToken,async(req,res) => {
+apollo.get('/api/holdfloatget',verifySession,verifyToken,async(req,res) => {
     try {
         let findHolds = await Hold.find({holdRequests:{$elemMatch:{holdLocation:req.query.currentLocation}}});
         res.send(findHolds);
@@ -94,7 +94,7 @@ twinkeep.get('/api/holdfloatget',verifySession,verifyToken,async(req,res) => {
     };
 })
 
-twinkeep.post('/api/login', async(req,res) => {
+apollo.post('/api/login', async(req,res) => {
     try{
         let login = req.body;
         let loginQuery = await User.findOne({normUsername:login.username.toUpperCase()}); 
@@ -113,7 +113,7 @@ twinkeep.post('/api/login', async(req,res) => {
     };
 });
 
-twinkeep.get('/api/confirmusertype',verifyToken,async(req,res) => {
+apollo.get('/api/confirmusertype',verifyToken,async(req,res) => {
     try{
         let sessionID = req.query.sessionID;
         console.log(sessionID);
@@ -126,7 +126,7 @@ twinkeep.get('/api/confirmusertype',verifyToken,async(req,res) => {
 
 let normalize = (str) => str.replace(/[^a-zA-Z0-9 ]/g,'').toUpperCase().split('').filter(e => e!== ' ').join('');
 
-twinkeep.get('/api/books',async(req,res) => {
+apollo.get('/api/books',async(req,res) => {
     try{
         let normQuery = normalize(req.query.query);
         let dbQuery = req.query.queryType === 'Book' ? await Book.find({normTitle:{$regex:normQuery}}) : await Book.find({normAuthors:normQuery});
@@ -137,7 +137,7 @@ twinkeep.get('/api/books',async(req,res) => {
     }
 });
 
-twinkeep.post('/api/holdfloatrequests',async(req,res) => {
+apollo.post('/api/holdfloatrequests',async(req,res) => {
     try{
         let request = req.body.request;
         console.log(request.holdType);
@@ -186,7 +186,7 @@ twinkeep.post('/api/holdfloatrequests',async(req,res) => {
 });
 
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://localhost:27017/twinkeep_db",{
+mongoose.connect("mongodb://localhost:27017/apollo_db",{
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err) => {
